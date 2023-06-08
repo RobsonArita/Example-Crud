@@ -1,0 +1,28 @@
+﻿<header class="custom-header text-white p-3" style="background-color: #002b5c;">
+    <h1 class="h4">Cotação Agora</h1>
+</header>
+
+<div class="container-fluid">
+    <div class="row">
+      <div class="col-2 p-0">
+        <div class="navbar navbar-dark bg-dark custom-navbar" style="width: 100%;">
+          <div class="navbar-nav flex-column" style="height: 100vh; display: flex; flex-direction: column; justify-content: flex-start; align-items: flex-start;">
+            <a class="nav-item nav-link" style="font-size: 25px;" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Inicio</a>
+            <a class="nav-item nav-link" routerLink="/users" style="font-size: 25px;" routerLinkActive="active">Users</a>
+            <a class="nav-item nav-link" routerLink="/solicitacao" style="font-size: 25px;" routerLinkActive="active">Solicitação de Compras</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-10">
+        <!-- cabeçalho -->
+
+        <!-- main app container -->
+        <div class="app-container bg-light">
+            <alert></alert>
+            <router-outlet></router-outlet>
+        </div>
+  
+      </div>
+    </div>
+  </div>
+  

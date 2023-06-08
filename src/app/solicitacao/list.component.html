@@ -1,0 +1,41 @@
+﻿<h1>Solicitação de Compra</h1>
+<a routerLink="add" class="btn btn-sm btn-success mb-2">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle mr-2" viewBox="0 0 16 16">
+        <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zm4 9H9v3a1 1 0 0 1-2 0V9H4a1 1 0 0 1 0-2h3V4a1 1 0 0 1 2 0v3h3a1 1 0 0 1 0 2z"/>
+    </svg>
+    Nova Solicitação
+</a>
+  
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th style="width: 30%">Código</th>
+            <th style="width: 30%">Solicitante</th>
+            <th style="width: 30%">Setor</th>
+            <th style="width: 30%">Data Criação</th>
+            <th style="width: 30%">Prazo para Cotação</th>
+            <th style="width: 30%">Ações</th>
+
+            <th style="width: 10%"></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let user of users">
+            <td>{{user.title}} {{user.firstName}} {{user.lastName}}</td>
+            <td>{{user.email}}</td>
+            <td>{{user.role}}</td>
+            <td style="white-space: nowrap">
+                <a routerLink="edit/{{user.id}}" class="btn btn-sm btn-primary mr-1">Edit</a>
+                <button (click)="deleteUser(user.id)" class="btn btn-sm btn-danger btn-delete-user" [disabled]="user.isDeleting">
+                    <span *ngIf="user.isDeleting" class="spinner-border spinner-border-sm"></span>
+                    <span *ngIf="!user.isDeleting">Delete</span>
+                </button>
+            </td>
+        </tr>
+        <tr *ngIf="!users">
+            <td colspan="4" class="text-center">
+                <span class="spinner-border spinner-border-lg align-center"></span>
+            </td>
+        </tr>
+    </tbody>
+</table>
