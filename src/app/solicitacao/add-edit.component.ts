@@ -1,10 +1,10 @@
 ﻿import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { AbstractControlOptions, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs/operators';
 
-import { UserService, AlertService } from '@app/_services';
-import { MustMatch } from '@app/_helpers';
+import { AlertService } from '@app/_services';
+import { SolicitacaoService } from '@app/_services/solicitacao.service';
 
 @Component({ templateUrl: 'add-edit.component.html' })
 export class AddEditComponent implements OnInit {
@@ -18,33 +18,24 @@ export class AddEditComponent implements OnInit {
         private formBuilder: FormBuilder,
         private route: ActivatedRoute,
         private router: Router,
-        private userService: UserService,
+        private solicitacaoService: SolicitacaoService,
         private alertService: AlertService
     ) {}
 
     ngOnInit() {
         this.id = this.route.snapshot.params['id'];
         this.isAddMode = !this.id;
-        
-        // password not required in edit mode
-        const passwordValidators = [Validators.minLength(6)];
-        if (this.isAddMode) {
-            passwordValidators.push(Validators.required);
-        }
 
-        const formOptions: AbstractControlOptions = { validators: MustMatch('password', 'confirmPassword') };
         this.form = this.formBuilder.group({
-            title: ['', Validators.required],
-            firstName: ['', Validators.required],
-            lastName: ['', Validators.required],
-            email: ['', [Validators.required, Validators.email]],
-            role: ['', Validators.required],
-            password: ['', [Validators.minLength(6), this.isAddMode ? Validators.required : Validators.nullValidator]],
-            confirmPassword: ['', this.isAddMode ? Validators.required : Validators.nullValidator]
-        }, formOptions);
+            codigo: ['', Validators.required],
+            solicitante: ['', Validators.required],
+            setor: ['', Validators.required],
+            dataDeCriacao: ['', [Validators.required]],
+            prazoDeCotacao: ['', Validators.required]
+        });
 
         if (!this.isAddMode) {
-            this.userService.getById(this.id)
+            this.solicitacaoService.getById(this.id)
                 .pipe(first())
                 .subscribe(x => this.form.patchValue(x));
         }
@@ -55,38 +46,41 @@ export class AddEditComponent implements OnInit {
 
     onSubmit() {
         this.submitted = true;
-
+        console.log('submit')
         // reset alerts on submit
         this.alertService.clear();
 
         // stop here if form is invalid
         if (this.form.invalid) {
+            console.log('invalid')
+            console.log({ invalid: this.form })
             return;
         }
 
         this.loading = true;
         if (this.isAddMode) {
-            this.createUser();
+            console.log('addmode')
+            this.createSolicitacao();
         } else {
-            this.updateUser();
+            this.updateSolicitacao();
         }
     }
 
-    private createUser() {
-        this.userService.create(this.form.value)
+    private createSolicitacao() {
+        this.solicitacaoService.create(this.form.value)
             .pipe(first())
             .subscribe(() => {
-                this.alertService.success('User added', { keepAfterRouteChange: true });
+                this.alertService.success('Solicitacao criada', { keepAfterRouteChange: true });
                 this.router.navigate(['../'], { relativeTo: this.route });
             })
             .add(() => this.loading = false);
     }
 
-    private updateUser() {
-        this.userService.update(this.id, this.form.value)
+    private updateSolicitacao() {
+        this.solicitacaoService.update(this.id, this.form.value)
             .pipe(first())
             .subscribe(() => {
-                this.alertService.success('User updated', { keepAfterRouteChange: true });
+                this.alertService.success('Solicitacao atualizada', { keepAfterRouteChange: true });
                 this.router.navigate(['../../'], { relativeTo: this.route });
             })
             .add(() => this.loading = false);

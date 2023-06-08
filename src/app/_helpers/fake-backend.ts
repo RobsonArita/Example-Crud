@@ -6,7 +6,7 @@ import { delay, materialize, dematerialize } from 'rxjs/operators';
 import { Role } from '@app/_models';
 
 // array in local storage for registered users
-const usersKey = 'angular-11-crud-example-users';
+const usersKey = 'users';
 const usersJSON = localStorage.getItem(usersKey);
 let users: any[] = usersJSON ? JSON.parse(usersJSON) : [{
     id: 1,
@@ -18,10 +18,22 @@ let users: any[] = usersJSON ? JSON.parse(usersJSON) : [{
     password: 'joe123'
 }];
 
+const solicitacoesKey = 'solicitacoes';
+const solicitacoesJSON = localStorage.getItem(solicitacoesKey);
+let solicitacoes: any[] = solicitacoesJSON ? JSON.parse(solicitacoesJSON) : [{
+    id: 1,
+    codigo: 'codigao',
+    solicitante: 'solicitante',
+    setor: 'setor',
+    dataDeCriacao: 'dataUm',
+    prazoDeCotacao: 'dataDois'
+}];
+
 @Injectable()
 export class FakeBackendInterceptor implements HttpInterceptor {
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         const { url, method, headers, body } = request;
+        console.log({ url, method, body })
 
         return handleRoute();
 
@@ -37,6 +49,16 @@ export class FakeBackendInterceptor implements HttpInterceptor {
                     return updateUser();
                 case url.match(/\/users\/\d+$/) && method === 'DELETE':
                     return deleteUser();
+                case url.endsWith('/solicitacao') && method === 'GET':
+                    return getSolicitacoes();
+                case url.match(/\/solicitacao\/\d+$/) && method === 'GET':
+                    return getSolicitacaoById();
+                case url.endsWith('/solicitacao') && method === 'POST':
+                    return createSolicitacao();
+                case url.match(/\/solicitacao\/\d+$/) && method === 'PUT':
+                    return updateSolicitacao();
+                case url.match(/\/solicitacao\/\d+$/) && method === 'DELETE':
+                    return deleteSolicitacao();
                 default:
                     // pass through any requests not handled above
                     return next.handle(request);
@@ -46,12 +68,12 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         // route functions
 
         function getUsers() {
-            return ok(users.map(x => basicDetails(x)));
+            return ok(users.map(x => userBasicDetails(x)));
         }
 
         function getUserById() {
             const user = users.find(x => x.id === idFromUrl());
-            return ok(basicDetails(user));
+            return ok(userBasicDetails(user));
         }
 
         function createUser() {
@@ -96,6 +118,44 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             return ok();
         }
 
+        function getSolicitacoes() {
+            console.log('passei')
+            return ok(solicitacoes.map(x => solicitacaoBasicDetails(x)));
+        }
+
+        function getSolicitacaoById() {
+            const solicitacao = solicitacoes.find(x => x.id === idFromUrl());
+            return ok(solicitacaoBasicDetails(solicitacao));
+        }
+
+        function createSolicitacao() {
+            const solicitacao = body;
+
+            // assign user id and a few other properties then save
+            solicitacao.id = newSolicitacaoId();
+            solicitacoes.push(solicitacao);
+            localStorage.setItem(solicitacoesKey, JSON.stringify(solicitacoes));
+
+            return ok();
+        }
+
+        function updateSolicitacao() {
+            let params = body;
+            let solicitacao = solicitacoes.find(x => x.id === idFromUrl());
+
+            // update and save user
+            Object.assign(solicitacao, params);
+            localStorage.setItem(solicitacoesKey, JSON.stringify(solicitacoes));
+
+            return ok();
+        }
+
+        function deleteSolicitacao() {
+            solicitacoes = solicitacoes.filter(x => x.id !== idFromUrl());
+            localStorage.setItem(solicitacoesKey, JSON.stringify(solicitacoes));
+            return ok();
+        }
+
         // helper functions
 
         function ok(body?: any) {
@@ -108,9 +168,15 @@ export class FakeBackendInterceptor implements HttpInterceptor {
                 .pipe(materialize(), delay(500), dematerialize()); // call materialize and dematerialize to ensure delay even if an error is thrown (https://github.com/Reactive-Extensions/RxJS/issues/648);
         }
 
-        function basicDetails(user: any) {
+        function userBasicDetails(user: any) {
             const { id, title, firstName, lastName, email, role } = user;
             return { id, title, firstName, lastName, email, role };
+        }
+
+        function solicitacaoBasicDetails(solicitacao: any) {
+            console.log({ solicitacao })
+            const { id, codigo, solicitante, setor, dataDeCriacao, prazoDeCotacao } = solicitacao
+            return { id, codigo, solicitante, setor, dataDeCriacao, prazoDeCotacao }
         }
 
         function idFromUrl() {
@@ -120,6 +186,10 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 
         function newUserId() {
             return users.length ? Math.max(...users.map(x => x.id)) + 1 : 1;
+        }
+
+        function newSolicitacaoId() {
+            return solicitacoes.length ? Math.max(...solicitacoes.map(x => x.id)) + 1 : 1;
         }
     }
 }

@@ -5,34 +5,34 @@
     </svg>
     Nova Solicitação
 </a>
-  
+
 <table class="table table-striped">
     <thead>
-        <tr>
-            <th style="width: 30%">Código</th>
-            <th style="width: 30%">Solicitante</th>
-            <th style="width: 30%">Setor</th>
-            <th style="width: 30%">Data Criação</th>
-            <th style="width: 30%">Prazo para Cotação</th>
-            <th style="width: 30%">Ações</th>
-
-            <th style="width: 10%"></th>
+        <tr style="align-items: end">
+            <th>Código</th>
+            <th>Solicitante</th>
+            <th>Setor</th>
+            <th>Data Criação</th>
+            <th>Prazo para Cotação</th>
+            <th>Ações</th>
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let user of users">
-            <td>{{user.title}} {{user.firstName}} {{user.lastName}}</td>
-            <td>{{user.email}}</td>
-            <td>{{user.role}}</td>
+        <tr *ngFor="let solicitacao of solicitacoes">
+            <td>{{solicitacao.codigo}}</td>
+            <td>{{solicitacao.solicitante}}</td>
+            <td>{{solicitacao.setor}}</td>
+            <td>{{solicitacao.dataDeCriacao}}</td>
+            <td>{{solicitacao.prazoDeCotacao}}</td>
             <td style="white-space: nowrap">
-                <a routerLink="edit/{{user.id}}" class="btn btn-sm btn-primary mr-1">Edit</a>
-                <button (click)="deleteUser(user.id)" class="btn btn-sm btn-danger btn-delete-user" [disabled]="user.isDeleting">
-                    <span *ngIf="user.isDeleting" class="spinner-border spinner-border-sm"></span>
-                    <span *ngIf="!user.isDeleting">Delete</span>
+                <a routerLink="edit/{{solicitacao.id}}" class="btn btn-sm btn-primary mr-1">Edit</a>
+                <button (click)="deleteSolicitacao(solicitacao.id)" class="btn btn-sm btn-danger btn-delete-solicitacao" [disabled]="solicitacao.isDeleting">
+                    <span *ngIf="solicitacao.isDeleting" class="spinner-border spinner-border-sm"></span>
+                    <span *ngIf="!solicitacao.isDeleting">Delete</span>
                 </button>
             </td>
         </tr>
-        <tr *ngIf="!users">
+        <tr *ngIf="!solicitacoes">
             <td colspan="4" class="text-center">
                 <span class="spinner-border spinner-border-lg align-center"></span>
             </td>
