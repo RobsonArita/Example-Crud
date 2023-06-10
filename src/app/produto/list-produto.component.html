@@ -1,0 +1,38 @@
+<h1>Produtos</h1>
+<a routerLink="add" class="btn btn-sm btn-success mb-2">
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle mr-2" viewBox="0 0 16 16">
+    <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zm4 9H9v3a1 1 0 0 1-2 0V9H4a1 1 0 0 1 0-2h3V4a1 1 0 0 1 2 0v3h3a1 1 0 0 1 0 2z" />
+  </svg>
+  Adicionar Produto
+</a>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Código</th>
+      <th>Nome</th>
+      <th>Descrição</th>
+      <th>Tipo de embalagem</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let produto of produtos">
+      <td>{{produto.codigo}}</td>
+      <td>{{produto.nome}}</td>
+      <td>{{produto.descricao}}</td>
+      <td>{{produto.tipoEmbalagem}}</td>
+      <td style="white-space: nowrap" class="text-center">
+        <a routerLink="edit/{{produto.id}}" class="btn btn-sm btn-primary mr-1">Edit</a>
+        <button (click)="deleteProduto(produto.id)" class="btn btn-sm btn-danger btn-delete-produto" [disabled]="produto.isDeleting">
+          <span *ngIf="produto.isDeleting" class="spinner-border spinner-border-sm"></span>
+          <span *ngIf="!produto.isDeleting">Delete</span>
+        </button>
+      </td>
+    </tr>
+    <tr *ngIf="!produtos">
+      <td colspan="6" class="text-center">
+        <span class="spinner-border spinner-border-lg align-middle"></span>
+      </td>
+    </tr>
+  </tbody>
+</table>
