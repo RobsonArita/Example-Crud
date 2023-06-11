@@ -12,11 +12,11 @@ let users: any[] = usersJSON ? JSON.parse(usersJSON) : []
 
 const solicitacoesKey = 'solicitacoes'
 const solicitacoesJSON = localStorage.getItem(solicitacoesKey)
-let solicitacoes: any[] = solicitacoesJSON ? JSON.parse(solicitacoesJSON) : []
+export let solicitacoes: any[] = solicitacoesJSON ? JSON.parse(solicitacoesJSON) : []
 
 const produtosKey = 'produtos'
 const produtosJSON = localStorage.getItem(produtosKey)
-let produtos: Array<Produto> = produtosJSON ? JSON.parse(produtosJSON) : []
+export let produtos: Array<Produto> = produtosJSON ? JSON.parse(produtosJSON) : []
 
 @Injectable()
 export class FakeBackendInterceptor implements HttpInterceptor {
