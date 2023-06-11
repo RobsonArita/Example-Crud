@@ -17,10 +17,9 @@
   </thead>
   <tbody>
     <tr *ngFor="let produto of produtos">
-      <td>{{produto.codigo}}</td>
+      <td>{{produto.id}}</td>
       <td>{{produto.nome}}</td>
       <td>{{produto.descricao}}</td>
-      <td>{{produto.tipoEmbalagem}}</td>
       <td style="white-space: nowrap" class="text-center">
         <a routerLink="edit/{{produto.id}}" class="btn btn-sm btn-primary mr-1">Edit</a>
         <button (click)="deleteProduto(produto.id)" class="btn btn-sm btn-danger btn-delete-produto" [disabled]="produto.isDeleting">

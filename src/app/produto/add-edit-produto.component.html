@@ -1,16 +1,9 @@
 <h1 *ngIf="isAddMode">Novo Produto</h1>
 <h1 *ngIf="!isAddMode">Edit User</h1>
 <form [formGroup]="form" (ngSubmit)="onSubmit()">
-    <div class="form-row">
-        <div class="form-group col-2">
-            <label>Código</label>
-            <input type="text" formControlName="codigo" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.codigo.errors }" />
-            <div *ngIf="submitted && f.codigo.errors" class="invalid-feedback">
-                <div *ngIf="f.codigo.errors.required">Digite um código!</div>
-            </div>
-        </div>
-        <div class="form-group col-5">
-          <label>Nome do produto</label>
+    <div class="form-row">        
+      <div class="form-group col-5">
+          <label>Nome</label>
           <input type="text" formControlName="nome" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.nome.errors }" />
           <div *ngIf="submitted && f.nome.errors" class="invalid-feedback">
               <div *ngIf="f.nome.errors.required">Digite o nome do produto!</div>
@@ -18,22 +11,13 @@
         </div>
     </div>
     <div class="form-row">
-      <div class="form-group col-7">
+      <div class="form-group col-5">
         <label>Descrição</label>
         <input type="text" formControlName="descricao" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.descricao.errors }" />
         <div *ngIf="submitted && f.descricao.errors" class="invalid-feedback">
             <div *ngIf="f.descricao.errors.required">Digite uma descricão!</div>
         </div>
       </div>
-    </div>
-    <div class="form-row">
-      <div class="form-group col-2">
-        <label>Tipo de embalagem</label>
-        <input type="text" formControlName="tipoEmbalagem" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.tipoEmbalagem.errors }" />
-        <div *ngIf="submitted && f.tipoEmbalagem.errors" class="invalid-feedback">
-            <div *ngIf="f.tipoEmbalagem.errors.required">Insira um tipo de embalagem!</div>
-        </div>
-    </div>
     </div>
     <div class="form-group">
         <button [disabled]="loading" class="btn btn-primary">

@@ -1,38 +1,34 @@
 ﻿<h1 *ngIf="isAddMode">Nova solicitação</h1>
 <h1 *ngIf="!isAddMode">Editar Solicitação</h1>
+<br>
 <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <h4>Informações</h4>
     <div class="form-row">
-        <div class="form-group col">
-            <label>Código</label>
-            <input type="text" formControlName="codigo" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.codigo.errors }" />
-            <div *ngIf="submitted && f.codigo.errors" class="invalid-feedback">
-                <div *ngIf="f.codigo.errors.required">Digite um código!</div>
-            </div>
-        </div>
-        <div class="form-group col">
-            <label>Solicitante</label>
-            <input type="text" formControlName="solicitante" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.solicitante.errors }" />
-            <div *ngIf="submitted && f.solicitante.errors" class="invalid-feedback">
-                <div *ngIf="f.solicitante.errors.required">Digite um solicitante!</div>
-            </div>
-        </div>
-        <div class="form-group col-5">
+        <div class="form-group col-4">
             <label>Setor</label>
             <input type="text" formControlName="setor" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.setor.errors }" />
             <div *ngIf="submitted && f.setor.errors" class="invalid-feedback">
                 <div *ngIf="f.setor.errors.required">Digite um setor!</div>
             </div>
         </div>
+        <div class="form-group col-4">
+            <label>Prioridade</label>
+            <input type="text" formControlName="prioridade" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.prioridade.errors }" />
+            <div *ngIf="submitted && f.prioridade.errors" class="invalid-feedback">
+                <div *ngIf="f.prioridade.errors.required">Digite a prioridade!</div>
+            </div>
+        </div>
     </div>
+
     <div class="form-row">
-        <div class="form-group col-2">
+        <div class="form-group col-4">
             <label>Data de criação</label>
             <input type="date" formControlName="dataDeCriacao" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.dataDeCriacao.errors }" />
             <div *ngIf="submitted && f.dataDeCriacao.errors" class="invalid-feedback">
                 <div *ngIf="f.dataDeCriacao.errors.required">Insira uma data de criação!</div>
             </div>
         </div>
-        <div class="form-group col-2">
+        <div class="form-group col-4">
             <label>Prazo de criação</label>
             <input type="date" formControlName="prazoDeCotacao" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.prazoDeCotacao.errors }" />
             <div *ngIf="submitted && f.prazoDeCotacao.errors" class="invalid-feedback">
@@ -40,6 +36,68 @@
             </div>
         </div>
     </div>
+<br>
+
+<h4>Embalagem</h4>
+<div class="form-row">
+    <div class="form-group col-5">
+        <label>Tipo</label>
+        <input type="text" formControlName="tipoEmbalagem" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.tipoEmbalagem.errors }" />
+        <div *ngIf="submitted && f.tipoEmbalagem.errors" class="invalid-feedback">
+            <div *ngIf="f.tipoEmbalagem.errors.required">Digite um tipo de embalagem!</div>
+        </div>
+    </div>
+    <div class="form-group col-5">
+        <label>Descrição</label>
+        <input type="text" formControlName="descricaoEmbalagem" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.descricaoEmbalagem.errors }" />
+        <div *ngIf="submitted && f.descricaoEmbalagem.errors" class="invalid-feedback">
+            <div *ngIf="f.descricaoEmbalagem.errors.required">Digite a descricao da embalagem!</div>
+        </div>
+    </div>
+</div>
+
+<br>
+
+    <h4>Solicitante</h4>
+
+    <div class="form-row">
+        <div class="form-group col-5">
+            <label>Nome</label>
+            <input type="text" formControlName="solicitante" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.solicitante.errors }" />
+            <div *ngIf="submitted && f.solicitante.errors" class="invalid-feedback">
+                <div *ngIf="f.solicitante.errors.required">Digite um solicitante!</div>
+            </div>
+        </div>
+        <div class="form-group col-5">
+            <label>CPF</label>
+            <input type="text" formControlName="cpfSolicitante" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.cpfSolicitante.errors }" />
+            <div *ngIf="submitted && f.cpfSolicitante.errors" class="invalid-feedback">
+                <div *ngIf="f.cpfSolicitante.errors.required">Digite um cpf!</div>
+            </div>
+        </div>
+    </div>
+    <br>
+    <h4>Produto</h4>
+
+    <div class="form-row">
+        <div class="form-group col-5">
+            <label>Nome</label>
+            <select formControlName="produto" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.produto.errors }">
+              <option *ngFor="let option of options" [value]="option.value">{{ option.label }}</option>
+            </select>
+            <div *ngIf="submitted && f.produto.errors" class="invalid-feedback">
+              <div *ngIf="f.produto.errors.required">Selecione um produto!</div>
+            </div>
+          </div>
+          <div class="form-group col-2">
+            <label>Quantidade</label>
+            <input type="text" formControlName="quantidade" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.quantidade.errors }" />
+            <div *ngIf="submitted && f.quantidade.errors" class="invalid-feedback">
+                <div *ngIf="f.quantidade.errors.required">Digite uma quantidade!</div>
+            </div>
+        </div>
+    </div>
+    <br>
     <div class="form-group">
         <button [disabled]="loading" class="btn btn-primary">
             <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>

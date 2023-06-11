@@ -2,12 +2,16 @@
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs/operators';
-
+import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { AlertService } from '@app/_services';
 import { SolicitacaoService } from '@app/_services/solicitacao.service';
+import { Produto } from '@app/_models/produto';
 
+const urlProdutos = 'http://localhost:4000/produtos'
 @Component({ templateUrl: 'add-edit.component.html' })
 export class AddEditComponent implements OnInit {
+    options: any[] = [];
+
     form!: FormGroup;
     id!: string;
     isAddMode!: boolean;
@@ -19,7 +23,8 @@ export class AddEditComponent implements OnInit {
         private route: ActivatedRoute,
         private router: Router,
         private solicitacaoService: SolicitacaoService,
-        private alertService: AlertService
+        private alertService: AlertService,
+        private http: HttpClient
     ) {}
 
     ngOnInit() {
@@ -27,11 +32,16 @@ export class AddEditComponent implements OnInit {
         this.isAddMode = !this.id;
 
         this.form = this.formBuilder.group({
-            codigo: ['', Validators.required],
             solicitante: ['', Validators.required],
+            prioridade: ['', Validators.required],
+            cpfSolicitante: ['', Validators.required],
             setor: ['', Validators.required],
             dataDeCriacao: ['', [Validators.required]],
-            prazoDeCotacao: ['', Validators.required]
+            prazoDeCotacao: ['', Validators.required],
+            produto: ['', Validators.required],
+            quantidade: ['', Validators.required],
+            tipoEmbalagem: ['', Validators.required],
+            descricaoEmbalagem: ['', Validators.required],
         });
 
         if (!this.isAddMode) {
@@ -39,14 +49,22 @@ export class AddEditComponent implements OnInit {
                 .pipe(first())
                 .subscribe(x => this.form.patchValue(x));
         }
+
+        this.fetchOptions()
     }
 
     // convenience getter for easy access to form fields
     get f() { return this.form.controls; }
 
+    fetchOptions() {
+        this.http.get<any>(urlProdutos).subscribe(data => {
+            const optionArray = data.map((product: Produto) => { return { value: product.id, label: product.nome } })
+            this.options = optionArray;
+          });   
+    }
+
     onSubmit() {
         this.submitted = true;
-        console.log('submit')
         // reset alerts on submit
         this.alertService.clear();
 
@@ -56,7 +74,7 @@ export class AddEditComponent implements OnInit {
             console.log({ invalid: this.form })
             return;
         }
-
+        
         this.loading = true;
         if (this.isAddMode) {
             console.log('addmode')

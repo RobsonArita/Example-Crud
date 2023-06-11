@@ -3,42 +3,20 @@ import { HttpRequest, HttpResponse, HttpHandler, HttpEvent, HttpInterceptor, HTT
 import { Observable, of, throwError } from 'rxjs'
 import { delay, materialize, dematerialize } from 'rxjs/operators'
 
-import { Role } from '@app/_models'
 import { Produto } from '@app/_models/produto'
 
 // array in local storage for registered users
 const usersKey = 'users'
 const usersJSON = localStorage.getItem(usersKey)
-let users: any[] = usersJSON ? JSON.parse(usersJSON) : [{
-    id: 1,
-    title: 'Mr',
-    firstName: 'Joe',
-    lastName: 'Bloggs',
-    email: 'joe@bloggs.com',
-    role: Role.User,
-    password: 'joe123'
-}]
+let users: any[] = usersJSON ? JSON.parse(usersJSON) : []
 
 const solicitacoesKey = 'solicitacoes'
 const solicitacoesJSON = localStorage.getItem(solicitacoesKey)
-let solicitacoes: any[] = solicitacoesJSON ? JSON.parse(solicitacoesJSON) : [{
-    id: 1,
-    codigo: 'codigao',
-    solicitante: 'solicitante',
-    setor: 'setor',
-    dataDeCriacao: 'dataUm',
-    prazoDeCotacao: 'dataDois'
-}]
+let solicitacoes: any[] = solicitacoesJSON ? JSON.parse(solicitacoesJSON) : []
 
 const produtosKey = 'produtos'
 const produtosJSON = localStorage.getItem(produtosKey)
-let produtos: Array<Produto> = produtosJSON ? JSON.parse(produtosJSON) : [{
-    id: 1,
-    codigo: 'codigao',
-    descricao: 'sou uma descrição',
-    nome: 'Detergente',
-    tipoEmbalagem: 'quue isso'
-}]
+let produtos: Array<Produto> = produtosJSON ? JSON.parse(produtosJSON) : []
 
 @Injectable()
 export class FakeBackendInterceptor implements HttpInterceptor {
@@ -93,6 +71,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 
         function getUsers() {
             return ok(users.map(x => userBasicDetails(x)))
+
         }
 
         function getUserById() {
@@ -143,13 +122,25 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         }
 
         function getSolicitacoes() {
-            console.log('passei')
-            return ok(solicitacoes.map(x => solicitacaoBasicDetails(x)))
+            const formatedSolicitacoes = solicitacoes.map(solicitacao => {
+                const detailSolicitacao = solicitacaoBasicDetails(solicitacao)
+
+                const produto = produtos.find(produto => produto.id === detailSolicitacao.produto)
+                const produtoNome = produto?.nome
+                detailSolicitacao.produto = produtoNome
+                
+                return detailSolicitacao
+            })
+
+            if (!formatedSolicitacoes[0]?.id && formatedSolicitacoes.length === 1) formatedSolicitacoes.pop()
+            return ok(formatedSolicitacoes)
         }
 
         function getSolicitacaoById() {
             const solicitacao = solicitacoes.find(x => x.id === idFromUrl())
-            return ok(solicitacaoBasicDetails(solicitacao))
+            const detailSolicitacao = solicitacaoBasicDetails(solicitacao)
+
+            return ok(detailSolicitacao)
         }
 
         function createSolicitacao() {
@@ -166,8 +157,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         function updateSolicitacao() {
             let params = body
             let solicitacao = solicitacoes.find(x => x.id === idFromUrl())
-
-            // update and save user
+            // update and save
             Object.assign(solicitacao, params)
             localStorage.setItem(solicitacoesKey, JSON.stringify(solicitacoes))
 
@@ -181,8 +171,13 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         }
 
         function getProdutos() {
-            console.log({ produtos: produtos.map(x => produtoBasicDetails(x)) })
-            return ok(produtos.map(x => produtoBasicDetails(x)))
+            const formatedProducts = produtos.map(product => {
+                const formatedProduct = produtoBasicDetails(product)
+                return formatedProduct
+            })
+
+            if (!formatedProducts[0]?.id && formatedProducts.length === 1) formatedProducts.pop()
+            return ok(formatedProducts)
         }
         
         function getProdutoById() {
@@ -193,10 +188,6 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         
         function createProduto(body: Produto) {
             const produto = body
-        
-            if (produtos.find(x => x.codigo === produto.codigo)) {
-                return error(`User with the code ${produto.codigo} already exists`)
-            }
             
             if (produtos.find(x => x.nome === produto.nome)) {
               return error(`User with the name ${produto.nome} already exists`)
@@ -217,10 +208,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             if (params.nome !== produto?.nome && produtos.find(x => x.nome === params.nome)) {
                 return error(`produto with the name ${params.nome} already exists`)
             }
-        
-            if (params.codigo !== produto?.codigo && produtos.find(x => x.codigo === params.codigo)) {
-              return error(`produto with the code ${params.codigo} already exists`)
-          }
+    
         
             // update and save produto
             Object.assign(produto as Produto, params)
@@ -236,8 +224,8 @@ export class FakeBackendInterceptor implements HttpInterceptor {
           }
         
         function produtoBasicDetails(produto: Produto) {
-            const { id, codigo, nome, descricao, tipoEmbalagem } = produto
-            return { id, codigo, nome, descricao, tipoEmbalagem }
+            const { id, nome, descricao } = produto
+            return { id, nome, descricao }
           }
         
         function  newProdutoId() {
@@ -257,9 +245,8 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         }
 
         function solicitacaoBasicDetails(solicitacao: any) {
-            console.log({ solicitacao })
-            const { id, codigo, solicitante, setor, dataDeCriacao, prazoDeCotacao } = solicitacao
-            return { id, codigo, solicitante, setor, dataDeCriacao, prazoDeCotacao }
+            const { id, prioridade, solicitante, cpfSolicitante, produto, quantidade, setor, dataDeCriacao, prazoDeCotacao } = solicitacao
+            return { id, prioridade, solicitante, cpfSolicitante, produto, quantidade, setor, dataDeCriacao, prazoDeCotacao }
         }
 
         function idFromUrl() {
