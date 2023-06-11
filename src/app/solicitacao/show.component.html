@@ -33,17 +33,36 @@
       text-align: right; /* Alinha o conteúdo à direita */
     }
 
+    .left-align {
+      text-align: left; /* Alinha o conteúdo à esquerda */
+    }
+
+    .button-container {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px; /* Adiciona um espaçamento entre os botões */
+    }
+
     button {
       padding: 10px 20px;
-      background-color: #18671b;
-      color: white;
       border: none;
       border-radius: 5px;
       cursor: pointer;
     }
 
+    button.aprovar {
+      background-color: #007bff; /* Azul */
+      color: white;
+      margin-right: 10px; /* Adiciona uma margem direita */
+    }
+
+    button.reprovar {
+      background-color: #ff0000; /* Vermelho */
+      color: white;
+    }
+
     button:hover {
-      background-color: #45a049;
+      opacity: 0.8;
     }
   </style>
 
@@ -100,9 +119,20 @@
     <span class="value">{{ form.get('quantidade')?.value }}</span>
   </div>
   
+  <div>
+    <span class="label">Situação:</span>
+    <span class="value">{{ form.get('situacao')?.value }}</span>
+  </div>
+  
   <br>
 
-  <div class="right-align">
-    <button (click)="voltar()">Voltar</button>
+  <div class="button-container">
+    <div class="left-align">
+      <button class="aprovar" *ngIf="form.get('situacao')?.value === 'aguardando'" (click)="aprovar()">Aprovar</button>
+      <button class="reprovar" *ngIf="form.get('situacao')?.value === 'aguardando'" (click)="reprovar()">Reprovar</button>
+    </div>
+    <div class="right-align">
+      <button (click)="voltar()">Voltar</button>
+    </div>
   </div>
 </div>

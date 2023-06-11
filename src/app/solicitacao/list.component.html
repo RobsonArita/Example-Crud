@@ -11,12 +11,11 @@
         <tr style="align-items: end">
             <th>Código</th>
             <th>Prioridade</th>
-            <th>Solicitante</th>
             <th>Produto</th>
             <th>Quantidade</th>
             <th>Setor</th>
             <th>Data Criação</th>
-            <th>Prazo para Cotação</th>
+            <th>Situação</th>
             <th>Ações</th>
         </tr>
     </thead>
@@ -29,12 +28,11 @@
                 </a>
               </td>
             <td>{{solicitacao.prioridade}}</td>
-            <td>{{solicitacao.solicitante}}</td>
             <td>{{solicitacao.produto}}</td>
             <td>{{solicitacao.quantidade}}</td>
             <td>{{solicitacao.setor}}</td>
             <td>{{solicitacao.dataDeCriacao}}</td>
-            <td>{{solicitacao.prazoDeCotacao}}</td>
+            <td>{{solicitacao.situacao}}</td>
             <td style="white-space: nowrap">
                 <a routerLink="edit/{{solicitacao.id}}" class="btn btn-sm btn-primary mr-1">Editar</a>
                 <button (click)="deleteSolicitacao(solicitacao.id)" class="btn btn-sm btn-danger btn-delete-solicitacao" [disabled]="solicitacao.isDeleting">
