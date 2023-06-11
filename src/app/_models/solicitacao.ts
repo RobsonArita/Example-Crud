@@ -1,5 +1,3 @@
-import { Produto } from "./produto"
-
 export class Solicitacao {
     id!: string
 
@@ -19,4 +17,6 @@ export class Solicitacao {
     descricaoEmbalagem!: string
 
     isDeleting: boolean = false
+
+    situacao: string = 'aguardando'
 }

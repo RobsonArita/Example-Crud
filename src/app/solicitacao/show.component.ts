@@ -2,7 +2,9 @@ import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { produtos, solicitacoes } from '@app/_helpers';
-import { Solicitacao } from '@app/_models/solicitacao';
+import { SolicitacaoService } from '@app/_services/solicitacao.service';
+import { first } from 'rxjs/operators';
+import { AlertService } from '@app/_services';
 
 @Component({
   selector: 'app-detalhe-solicitacao',
@@ -10,11 +12,14 @@ import { Solicitacao } from '@app/_models/solicitacao';
 })
 export class DetalheSolicitacaoComponent {
   form: FormGroup;
+  loading = false
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private solicitacaoService: SolicitacaoService,
+    private alertService: AlertService
   ) {
     this.form = this.formBuilder.group({
       setor: [''],
@@ -26,7 +31,8 @@ export class DetalheSolicitacaoComponent {
       solicitante: [''],
       cpfSolicitante: [''],
       produto: [''],
-      quantidade: ['']
+      quantidade: [''],
+      situacao: ['']
     });
   }
 
@@ -36,7 +42,6 @@ export class DetalheSolicitacaoComponent {
     const solicitacao = solicitacoes.find(solicitacao => solicitacao.id === Number(id))
     const produto = produtos.find(produto => produto.id === solicitacao.produto)
     const produtoNome = produto?.nome
-    solicitacao.produto = produtoNome
 
     this.form.get('setor')?.setValue(solicitacao?.setor)
     this.form.get('prioridade')?.setValue(solicitacao?.prioridade)
@@ -46,12 +51,34 @@ export class DetalheSolicitacaoComponent {
     this.form.get('descricaoEmbalagem')?.setValue(solicitacao?.descricaoEmbalagem)
     this.form.get('solicitante')?.setValue(solicitacao?.solicitante)
     this.form.get('cpfSolicitante')?.setValue(solicitacao?.cpfSolicitante)
-    this.form.get('produto')?.setValue(solicitacao?.produto)
+    this.form.get('produto')?.setValue(produtoNome)
     this.form.get('quantidade')?.setValue(solicitacao?.quantidade)
+    this.form.get('situacao')?.setValue(solicitacao?.situacao ?? 'aguardando')
+  }
 
+  aprovar(){
+    const id = this.route.snapshot.params.id;
+    console.log('aprova')
+    this.solicitacaoService.update(id, { situacao: 'aprovado' }).pipe(first())
+    .subscribe(() => {
+        this.alertService.success('Solicitacao aprovada', { keepAfterRouteChange: true });
+        this.router.navigate(['../../'], { relativeTo: this.route });
+    })
+    .add(() => this.loading = false);
+  }
+
+  reprovar(){
+    const id = this.route.snapshot.params.id;
+    this.solicitacaoService.update(id, { situacao: 'reprovado' }).pipe(first())
+    .subscribe(() => {
+        this.alertService.success('Solicitacao reprovada', { keepAfterRouteChange: true });
+        this.router.navigate(['../../'], { relativeTo: this.route });
+    })
+    .add(() => this.loading = false);
   }
 
   voltar() {
+    console.log('voltar')
     this.router.navigate(['/solicitacao']);
   }
 }

@@ -124,14 +124,11 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         function getSolicitacoes() {
             const formatedSolicitacoes = solicitacoes.map(solicitacao => {
                 const detailSolicitacao = solicitacaoBasicDetails(solicitacao)
-
-                const produto = produtos.find(produto => produto.id === detailSolicitacao.produto)
-                const produtoNome = produto?.nome
-                detailSolicitacao.produto = produtoNome
-                
+                const product = produtos.find(prod => prod.id === detailSolicitacao.produto?.toString())
+                detailSolicitacao.produto = product?.nome
                 return detailSolicitacao
             })
-
+            console.log({ formatedSolicitacoes })
             if (!formatedSolicitacoes[0]?.id && formatedSolicitacoes.length === 1) formatedSolicitacoes.pop()
             return ok(formatedSolicitacoes)
         }
@@ -155,7 +152,9 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         }
 
         function updateSolicitacao() {
+            console.log('awsa')
             let params = body
+            console.log({ params })
             let solicitacao = solicitacoes.find(x => x.id === idFromUrl())
             // update and save
             Object.assign(solicitacao, params)
@@ -245,8 +244,8 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         }
 
         function solicitacaoBasicDetails(solicitacao: any) {
-            const { id, prioridade, solicitante, cpfSolicitante, produto, quantidade, setor, dataDeCriacao, prazoDeCotacao } = solicitacao
-            return { id, prioridade, solicitante, cpfSolicitante, produto, quantidade, setor, dataDeCriacao, prazoDeCotacao }
+            const { id, prioridade, solicitante, cpfSolicitante, tipoEmbalagem, descricaoEmbalagem, produto, quantidade, setor, dataDeCriacao, prazoDeCotacao, situacao } = solicitacao
+            return { id, prioridade, solicitante, cpfSolicitante, tipoEmbalagem, descricaoEmbalagem, produto, quantidade, setor, dataDeCriacao, prazoDeCotacao, situacao: situacao ?? 'aguardando' }
         }
 
         function idFromUrl() {
