@@ -22,7 +22,12 @@
     </thead>
     <tbody>
         <tr *ngFor="let solicitacao of solicitacoes">
-            <td>{{solicitacao.id}}</td>
+            <td>
+                <a (click)="irParaDetalhes(solicitacao.id)" routerLink="detalhes/{{solicitacao.id}}" 
+                   style="cursor: pointer; text-decoration: underline; color: blue;">
+                  {{solicitacao.id}}
+                </a>
+              </td>
             <td>{{solicitacao.prioridade}}</td>
             <td>{{solicitacao.solicitante}}</td>
             <td>{{solicitacao.produto}}</td>
@@ -31,7 +36,7 @@
             <td>{{solicitacao.dataDeCriacao}}</td>
             <td>{{solicitacao.prazoDeCotacao}}</td>
             <td style="white-space: nowrap">
-                <a routerLink="edit/{{solicitacao.id}}" class="btn btn-sm btn-primary mr-1">Edit</a>
+                <a routerLink="edit/{{solicitacao.id}}" class="btn btn-sm btn-primary mr-1">Editar</a>
                 <button (click)="deleteSolicitacao(solicitacao.id)" class="btn btn-sm btn-danger btn-delete-solicitacao" [disabled]="solicitacao.isDeleting">
                     <span *ngIf="solicitacao.isDeleting" class="spinner-border spinner-border-sm"></span>
                     <span *ngIf="!solicitacao.isDeleting">Delete</span>

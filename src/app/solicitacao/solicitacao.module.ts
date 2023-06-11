@@ -6,6 +6,7 @@ import { UsersRoutingModule } from './solicitacao-routing.module';
 import { LayoutComponent } from './layout.component';
 import { ListComponent } from './list.component';
 import { AddEditComponent } from './add-edit.component';
+import { DetalheSolicitacaoComponent } from './show.component';
 
 @NgModule({
     imports: [
@@ -16,7 +17,8 @@ import { AddEditComponent } from './add-edit.component';
     declarations: [
         LayoutComponent,
         ListComponent,
-        AddEditComponent
+        AddEditComponent,
+        DetalheSolicitacaoComponent
     ]
 })
 export class SolicitacaoModule { }

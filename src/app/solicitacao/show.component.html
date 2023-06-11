@@ -1,0 +1,108 @@
+<div>
+  <style>
+    .detalhes-solicitacao {
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f2f2f2;
+      border-radius: 5px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      font-size: 40px;
+      margin-bottom: 10px;
+    }
+
+    h4 {
+      font-size: 30px;
+      margin-bottom: 10px;
+    }
+
+    span {
+      font-size: 20px;
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .value {
+      text-align: right; /* Alinha os valores à direita */
+    }
+
+    .right-align {
+      text-align: right; /* Alinha o conteúdo à direita */
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: #18671b;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+  </style>
+
+  <h1>Detalhes da Solicitação</h1>
+  <br>
+  <h4>Informações</h4>
+  <div>
+    <span class="label">Setor:</span>
+    <span class="value">{{ form.get('setor')?.value }}</span>
+  </div>
+  
+  <div>
+    <span class="label">Prioridade:</span>
+    <span class="value">{{ form.get('prioridade')?.value }}</span>
+  </div>
+  
+  <div>
+    <span class="label">Data de criação:</span>
+    <span class="value">{{ form.get('dataDeCriacao')?.value }}</span>
+  </div>
+  
+  <div>
+    <span class="label">Prazo de cotação:</span>
+    <span class="value">{{ form.get('prazoDeCotacao')?.value }}</span>
+  </div>
+  
+  <div>
+    <span class="label">Tipo de embalagem:</span>
+    <span class="value">{{ form.get('tipoEmbalagem')?.value }}</span>
+  </div>
+  
+  <div>
+    <span class="label">Descrição da embalagem:</span>
+    <span class="value">{{ form.get('descricaoEmbalagem')?.value }}</span>
+  </div>
+  
+  <div>
+    <span class="label">Solicitante:</span>
+    <span class="value">{{ form.get('solicitante')?.value }}</span>
+  </div>
+  
+  <div>
+    <span class="label">CPF do solicitante:</span>
+    <span class="value">{{ form.get('cpfSolicitante')?.value }}</span>
+  </div>
+  
+  <div>
+    <span class="label">Produto:</span>
+    <span class="value">{{ form.get('produto')?.value }}</span>
+  </div>
+  
+  <div>
+    <span class="label">Quantidade:</span>
+    <span class="value">{{ form.get('quantidade')?.value }}</span>
+  </div>
+  
+  <br>
+
+  <div class="right-align">
+    <button (click)="voltar()">Voltar</button>
+  </div>
+</div>
